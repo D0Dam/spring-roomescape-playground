@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,30 +25,30 @@ public class MemberController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Member>> read() {
+    public ResponseEntity<List<Member>> readMembers() {
         return ResponseEntity.ok(members);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Member> create(@RequestBody Member member) {
-        if(member.getName() == null || member.getName().isEmpty()) {
+    public ResponseEntity<Member> createMember(@RequestBody Member member) {
+        if (member.getName() == null || member.getName().isEmpty()) {
             throw new IllegalArgumentException("name 은 필수 값입니다.");
         }
-        if(member.getDate() == null || member.getDate().isEmpty()) {
+        if (member.getDate() == null || member.getDate().isEmpty()) {
             throw new IllegalArgumentException("date 는 필수 값입니다.");
         }
-        if(member.getTime() == null || member.getTime().isEmpty()) {
+        if (member.getTime() == null || member.getTime().isEmpty()) {
             throw new IllegalArgumentException("time 은 필수 값입니다.");
         }
 
-     Member newMember = Member.toEntity(member, index.getAndIncrement());
-     members.add(newMember);
+        Member newMember = Member.toEntity(member, index.getAndIncrement());
+        members.add(newMember);
 
-     return ResponseEntity.created(URI.create("/reservations/" + newMember.getId())).body(newMember);
+        return ResponseEntity.created(URI.create("/reservations/" + newMember.getId())).body(newMember);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         Member deletedMember = members.stream()
                 .filter(member -> member.getId().equals(id))
                 .findFirst()
