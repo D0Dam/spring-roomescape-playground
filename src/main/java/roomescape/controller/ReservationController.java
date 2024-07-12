@@ -4,6 +4,7 @@ import java.net.URI;
 import java.sql.PreparedStatement;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import roomescape.model.Reservation;
 
@@ -45,15 +47,9 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-        if (reservation.getName() == null || reservation.getName().isEmpty()) {
-            throw new IllegalArgumentException("name 은 필수 값입니다.");
-        }
-        if (reservation.getDate() == null || reservation.getDate().isEmpty()) {
-            throw new IllegalArgumentException("date 는 필수 값입니다.");
-        }
-        if (reservation.getTime() == null || reservation.getTime().isEmpty()) {
-            throw new IllegalArgumentException("time 은 필수 값입니다.");
+    public ResponseEntity<Reservation> createReservation(@Valid @RequestBody Reservation reservation, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new  IllegalArgumentException(result.getFieldError().getDefaultMessage());
         }
 
         KeyHolder keyHolder = new GeneratedKeyHolder();

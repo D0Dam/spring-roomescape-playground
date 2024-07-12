@@ -1,9 +1,21 @@
 package roomescape.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Reservation {
     private Long id;
+
+    @NotNull(message = "name 이 null 입니다.")
+    @NotBlank(message = "name 이 빈문자열입니다.")
     private String name;
+
+    @NotNull(message = "date 가 null 입니다.")
+    @NotBlank(message = "date rk 빈문자열입니다.")
     private String date;
+
+    @NotNull(message = "time 이 null 입니다.")
+    @NotBlank(message = "time 이 빈문자열입니다.")
     private String time;
 
     public Reservation() {
